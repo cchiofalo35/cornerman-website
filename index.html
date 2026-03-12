@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cornerman Consulting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Hedvig+Letters+Serif:opsz@12..24&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@400,500,600,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #16161C;
+    --bg-card:   #19191F;
+    --bg-raised: #1E1E26;
+    --lime:      #EBFE46;
+    --white:     #FFFFFF;
+    --muted:     #737373;
+    --border:    rgba(255,255,255,0.07);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--white);
+    font-family: 'Manrope', sans-serif; font-weight: 400;
+    overflow-x: hidden; -webkit-font-smoothing: antialiased;
+  }
+  .cursor {
+    position: fixed; width: 10px; height: 10px;
+    background: var(--lime); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.12s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1.5px solid rgba(235,254,70,0.4); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, border-color 0.3s;
+  }
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 56px;
+    background: linear-gradient(to bottom, rgba(22,22,28,0.97) 0%, transparent 100%);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo-mark {
+    width: 26px; height: 26px; background: var(--lime);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo-text {
+    font-family: 'Clash Grotesk', 'Manrope', sans-serif;
+    font-weight: 600; font-size: 14px; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--white);
+  }
+  .nav-links { display: flex; gap: 36px; align-items: center; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--lime) !important; color: var(--bg) !important;
+    padding: 10px 22px; font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: #f3ff60 !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+    position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 340px; height: 340px;
+    background: linear-gradient(225deg, rgba(235,254,70,0.07) 0%, transparent 65%);
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+    z-index: 0;
+  }
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 160px 56px 88px; position: relative; z-index: 2;
+  }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--lime);
+    margin-bottom: 28px; display: flex; align-items: center; gap: 14px;
+    opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s;
+  }
+  .hero-eyebrow::before { content: ''; width: 36px; height: 1.5px; background: var(--lime); }
+  .hero-title {
+    font-family: 'Clash Grotesk', 'Manrope', sans-serif;
+    font-weight: 600; font-size: clamp(64px, 7.5vw, 110px);
+    line-height: 0.92; letter-spacing: -0.02em; margin-bottom: 36px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.35s;
+  }
+  .hero-title em {
+    font-family: 'Hedvig Letters Serif', serif;
+    font-style: italic; color: var(--lime); font-weight: 400; letter-spacing: 0;
+  }
+  .hero-desc {
+    font-size: 16px; font-weight: 400; line-height: 1.75;
+    color: var(--muted); max-width: 400px; margin-bottom: 52px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.5s;
+  }
+  .hero-btn {
+    display: inline-flex; align-items: center; gap: 14px;
+    background: var(--lime); color: var(--bg);
+    padding: 15px 30px; font-family: 'Manrope', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; text-decoration: none; width: fit-content;
+    transition: background 0.2s, transform 0.2s;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.65s;
+  }
+  .hero-btn:hover { background: #f3ff60; transform: translateX(4px); }
+  .hero-btn svg { transition: transform 0.2s; }
+  .hero-btn:hover svg { transform: translateX(4px); }
+  .hero-right { position: relative; z-index: 1; overflow: hidden; opacity: 0; animation: fadeIn 1s ease forwards 0.3s; }
+  .hero-shapes { position: absolute; inset: 0; }
+  .shape { position: absolute; }
+  .shape-1 {
+    width: 420px; height: 420px; top: 8%; left: 10%;
+    background: rgba(235,254,70,0.025);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    transform: rotate(-25deg);
+  }
+  .shape-2 {
+    width: 240px; height: 240px; bottom: 22%; right: 8%;
+    background: rgba(235,254,70,0.035);
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+  }
+  .shape-3 {
+    width: 160px; height: 160px; top: 42%; right: 32%;
+    background: rgba(255,255,255,0.018);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  }
+  .hero-stats {
+    position: absolute; bottom: 72px; left: 40px; right: 40px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px; z-index: 2;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.9s;
+  }
+  .hero-stat {
+    background: rgba(22,22,28,0.88); border: 1px solid var(--border);
+    padding: 26px 28px; backdrop-filter: blur(12px);
+  }
+  .hero-stat-num {
+    font-family: 'Clash Grotesk', 'Manrope', sans-serif;
+    font-weight: 600; font-size: 42px; color: var(--lime);
+    line-height: 1; letter-spacing: -0.02em; margin-bottom: 6px;
+  }
+  .hero-stat-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted); line-height: 1.4;
+  }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 0 56px; }
+
+  /* SECTION BASE */
+  section { padding: 112px 56px; }
+  .s-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--lime);
+    display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+  }
+  .s-label::before { content: ''; width: 32px; height: 1.5px; background: var(--lime); }
+  .s-title {
+    font-family: 'Clash Grotesk', 'Manrope', sans-serif;
+    font-weight: 600; font-size: clamp(36px, 4vw, 54px);
+    line-height: 1.05; letter-spacing: -0.02em;
+  }
+  .s-title em {
+    font-family: 'Hedvig Letters Serif', serif;
+    font-style: italic; color: var(--lime); font-weight: 400;
+  }
+
+  /* WHAT WE DO */
+  .what-we-do { background: var(--bg); }
+  .wwd-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 72px;
+  }
+  .wwd-header-right {
+    max-width: 360px; font-size: 15px; line-height: 1.75;
+    color: var(--muted); padding-top: 8px;
+  }
+  .services { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+  .service {
+    background: var(--bg-card); padding: 44px 32px;
+    position: relative; overflow: hidden; transition: background 0.25s;
+  }
+  .service::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--border); transition: background 0.3s;
+  }
+  .service:hover { background: var(--bg-raised); }
+  .service:hover::before { background: var(--lime); }
+  .svc-num {
+    font-family: 'Clash Grotesk', 'Manrope', sans-serif;
+    font-size: 12px; font-weight: 500; letter-spacing: 0.15em;
+    color: var(--lime); margin-bottom: 36px;
+  }
+  .svc-name {
+    font-size: 17px; font-weight: 700; line-height: 1.3;
+    margin-bottom: 14px; color: var(--white);
+  }
+  .svc-desc { font-size: 13.5px; line-height: 1.7; color: var(--muted); }
+
+  /* PEOPLE */
+  .people { background: var(--bg-card); }
+  .people-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 72px; }
+  .person { background: var(--bg); padding: 56px 52px; }
+  .person-top {
+    display: flex; align-items: flex-end; gap: 28px;
+    margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border);
+  }
+  .avatar {
+    width: 88px; height: 88px; background: var(--bg-card);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; position: relative;
+  }
+  .avatar::after {
+    content: ''; position: absolute; bottom: -1px; left: 0;
+    width: 100%; height: 2.5px; background: var(--lime);
+  }
+  .avatar-letters {
+    font-family: 'Clash Grotesk', 'Manrope', sans-serif;
+    font-weight: 600; font-size: 28px; color: var(--lime); letter-spacing: 0.05em;
+  }
+  .person-role {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--lime); margin-bottom: 6px;
+  }
+  .person-name {
+    font-family: 'Clash Grotesk', 'Manrope', sans-serif;
+    font-weight: 600; font-size: 28px; letter-spacing: -0.01em; line-height: 1.1; margin-bottom: 4px;
+  }
+  .person-company { font-size: 12px; color: var(--muted); letter-spacing: 0.06em; }
+  .person-bio { font-size: 14.5px; line-height: 1.8; color: var(--muted); margin-bottom: 16px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+  .tag {
+    padding: 5px 13px; border: 1px solid var(--border);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted); transition: border-color 0.2s, color 0.2s;
+  }
+  .tag:hover { border-color: var(--lime); color: var(--lime); }
+
+  /* RESULTS */
+  .results { background: var(--bg); }
+  .results-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .results-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .r-stat { background: var(--bg-card); padding: 40px 32px; position: relative; }
+  .r-stat-bar {
+    position: absolute; top: 0; left: 0;
+    width: 2.5px; height: 40px; background: var(--lime);
+  }
+  .r-num {
+    font-family: 'Clash Grotesk', 'Manrope', sans-serif; font-weight: 600;
+    font-size: 52px; letter-spacing: -0.03em; line-height: 1; margin-bottom: 8px;
+  }
+  .r-num span { color: var(--lime); }
+  .r-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); line-height: 1.5; }
+  .results-text .s-label { margin-bottom: 24px; }
+  .results-text .s-title { margin-bottom: 28px; }
+  .results-text p { font-size: 14.5px; line-height: 1.8; color: var(--muted); margin-bottom: 16px; }
+  .results-text .highlight { color: var(--lime); font-weight: 600; font-size: 14px; }
+
+  /* APPROACH */
+  .approach { background: var(--bg-card); }
+  .approach-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 72px; }
+  .step {
+    background: var(--bg); padding: 44px 32px;
+    position: relative; overflow: hidden; transition: background 0.25s;
+  }
+  .step-bar {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--border); transition: background 0.3s;
+  }
+  .step:hover { background: #17171e; }
+  .step:hover .step-bar { background: var(--lime); }
+  .step-big-num {
+    font-family: 'Clash Grotesk', 'Manrope', sans-serif; font-weight: 600;
+    font-size: 88px; color: rgba(255,255,255,0.04); line-height: 1;
+    margin-bottom: 20px; letter-spacing: -0.04em;
+  }
+  .step-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--white); }
+  .step-desc { font-size: 13.5px; line-height: 1.7; color: var(--muted); }
+
+  /* CONTACT */
+  .contact { background: var(--bg); }
+  .contact-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .contact-heading {
+    font-family: 'Clash Grotesk', 'Manrope', sans-serif; font-weight: 600;
+    font-size: clamp(56px, 7vw, 96px); line-height: 0.92;
+    letter-spacing: -0.03em; margin-top: 24px; margin-bottom: 32px;
+  }
+  .contact-heading span { color: var(--lime); }
+  .contact-sub { font-size: 15px; line-height: 1.75; color: var(--muted); }
+  .contact-cards { display: flex; flex-direction: column; gap: 2px; }
+  .contact-card {
+    background: var(--bg-card); padding: 40px 44px;
+    position: relative; overflow: hidden; transition: background 0.25s;
+  }
+  .contact-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 0; background: var(--lime); transition: width 0.3s;
+  }
+  .contact-card:hover { background: var(--bg-raised); }
+  .contact-card:hover::before { width: 2.5px; }
+  .cc-role { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--lime); margin-bottom: 6px; }
+  .cc-name { font-family: 'Clash Grotesk', 'Manrope', sans-serif; font-weight: 600; font-size: 24px; letter-spacing: -0.01em; margin-bottom: 20px; }
+  .cc-links { display: flex; flex-direction: column; gap: 8px; }
+  .cc-link { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; text-decoration: none; transition: color 0.2s; }
+  .cc-link:hover { color: var(--white); }
+  .cc-arrow { color: var(--lime); font-size: 12px; font-weight: 700; }
+
+  /* FOOTER */
+  footer {
+    background: #101014; padding: 36px 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo-text {
+    font-family: 'Clash Grotesk', 'Manrope', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: rgba(255,255,255,0.25);
+  }
+  .footer-copy { font-size: 12px; color: rgba(255,255,255,0.18); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.75s ease, transform 0.75s ease; }
+  .reveal.on { opacity: 1; transform: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 1100px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .services, .approach-steps { grid-template-columns: 1fr 1fr; }
+    .people-grid, .results-inner, .contact-inner { grid-template-columns: 1fr; gap: 48px; }
+    nav, section, footer, .divider { padding-left: 28px; padding-right: 28px; }
+    .divider { margin: 0; }
+    .wwd-header { flex-direction: column; gap: 20px; }
+  }
+  @media (max-width: 640px) {
+    .services, .approach-steps, .results-stats { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .person { padding: 36px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curR"></div>
+
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-mark">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <rect x="1" y="1" width="4" height="11" fill="#16161C"/>
+        <rect x="7" y="1" width="6" height="6" fill="#16161C"/>
+      </svg>
+    </div>
+    <span class="nav-logo-text">Cornerman Consulting</span>
+  </a>
+  <div class="nav-links">
+    <a href="#what-we-do">What We Do</a>
+    <a href="#people">Our People</a>
+    <a href="#results">Results</a>
+    <a href="#contact" class="nav-cta">Work With Us</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="padding:0;">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Revenue Growth Consulting</p>
+    <h1 class="hero-title">In Your<br><em>Corner.</em><br>Every<br>Round.</h1>
+    <p class="hero-desc">We don't just advise — we embed. Cornerman builds self-sustaining revenue engines for businesses ready to compete and win at the highest level.</p>
+    <a href="#contact" class="hero-btn">
+      Work With Us
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+  <div class="hero-right">
+    <div class="hero-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">$2.7M</div>
+        <div class="hero-stat-label">Closed Won Revenue<br>FY26 to Date</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">+129%</div>
+        <div class="hero-stat-label">Growth in Closed<br>Deals Q-on-Q</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">+121%</div>
+        <div class="hero-stat-label">Pipeline Creation<br>vs Prior Baseline</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">+236%</div>
+        <div class="hero-stat-label">Deal Velocity<br>in 4 Months</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WHAT WE DO -->
+<section class="what-we-do" id="what-we-do">
+  <div class="wwd-header reveal">
+    <div>
+      <p class="s-label">What We Do</p>
+      <h2 class="s-title">We build the engine.<br>You drive the <em>growth.</em></h2>
+    </div>
+    <p class="wwd-header-right">We design and embed Revenue Generation Engines that unify marketing, sales, and customer success — turning strategy into consistent, predictable revenue through data, training, and accountability.</p>
+  </div>
+  <div class="services">
+    <div class="service reveal"><div class="svc-num">01</div><div class="svc-name">Revenue Strategy & Architecture</div><p class="svc-desc">We connect service delivery to financial outcomes through segmentation, forecasting, and KPI frameworks — building growth systems from the ground up.</p></div>
+    <div class="service reveal"><div class="svc-num">02</div><div class="svc-name">Sales Enablement & Execution</div><p class="svc-desc">Playbooks, training, pipeline discipline, and KPI accountability — transforming sales teams into high-performing, data-driven operators.</p></div>
+    <div class="service reveal"><div class="svc-num">03</div><div class="svc-name">Marketing Activation & Pipeline</div><p class="svc-desc">We turn marketing into a measurable sales engine — data-led campaigns, ROI analysis, and campaign development teams that generate qualified pipeline.</p></div>
+    <div class="service reveal"><div class="svc-num">04</div><div class="svc-name">Account Management & Retention</div><p class="svc-desc">Tiering models, cross-sell frameworks, and utilisation programs that protect and grow existing revenue — turning customers into long-term partners.</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PEOPLE -->
+<section class="people" id="people">
+  <div class="reveal">
+    <p class="s-label">Our People</p>
+    <h2 class="s-title">Two operators.<br>One <em>mission.</em></h2>
+  </div>
+  <div class="people-grid">
+    <div class="person reveal">
+      <div class="person-top">
+        <div class="avatar"><span class="avatar-letters">CM</span></div>
+        <div>
+          <div class="person-role">CEO & Founder</div>
+          <div class="person-name">Craig Moore</div>
+          <div class="person-company">Cornerman Consulting</div>
+        </div>
+      </div>
+      <p class="person-bio">Craig is the architect of the Cornerman methodology — a hands-on revenue transformation framework built from real-world experience scaling sales functions across healthcare, rehabilitation, and professional services.</p>
+      <p class="person-bio">He specialises in embedding directly into leadership teams to design and execute group-level growth engines: restructuring CRM operations, building pipeline discipline, designing account management models, and establishing the cadences and accountability systems that turn strategy into measurable outcomes.</p>
+      <p class="person-bio">Craig's approach is direct — get in close, understand the real gaps, and build systems the business can own long after the engagement ends.</p>
+      <div class="tags">
+        <span class="tag">Revenue Architecture</span><span class="tag">CRM & HubSpot</span><span class="tag">Sales Transformation</span><span class="tag">Deal Clinics</span><span class="tag">Executive Advisory</span><span class="tag">QBR Facilitation</span>
+      </div>
+    </div>
+    <div class="person reveal">
+      <div class="person-top">
+        <div class="avatar"><span class="avatar-letters">CC</span></div>
+        <div>
+          <div class="person-role">Director</div>
+          <div class="person-name">Chris Chiofalo</div>
+          <div class="person-company">Cornerman Consulting</div>
+        </div>
+      </div>
+      <p class="person-bio">Chris brings the commercial rigour that turns strategy into execution. As Director at Cornerman, he leads client delivery — overseeing the implementation of revenue systems, managing stakeholder relationships, and ensuring every engagement delivers measurable business impact.</p>
+      <p class="person-bio">His strength lies in bridging the gap between senior leadership vision and frontline execution — working directly with sales, marketing, and customer success teams to embed new disciplines and drive adoption from the ground up.</p>
+      <p class="person-bio">Chris is the day-to-day partner clients rely on to keep the engine running — maintaining momentum, holding the team accountable, and continuously translating data into decisions.</p>
+      <div class="tags">
+        <span class="tag">Client Delivery</span><span class="tag">Sales Enablement</span><span class="tag">Pipeline Management</span><span class="tag">Stakeholder Engagement</span><span class="tag">Account Management</span><span class="tag">Change Management</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- RESULTS -->
+<section class="results" id="results">
+  <div class="results-inner">
+    <div class="results-stats reveal">
+      <div class="r-stat"><div class="r-stat-bar"></div><div class="r-num">$<span>2.7</span>M</div><div class="r-label">Total Closed Won<br>Revenue FY26</div></div>
+      <div class="r-stat"><div class="r-stat-bar"></div><div class="r-num">+<span>129</span>%</div><div class="r-label">Growth in Closed<br>Deals Q-on-Q</div></div>
+      <div class="r-stat"><div class="r-stat-bar"></div><div class="r-num">+<span>121</span>%</div><div class="r-label">Pipeline Creation<br>vs Prior Baseline</div></div>
+      <div class="r-stat"><div class="r-stat-bar"></div><div class="r-num">+<span>236</span>%</div><div class="r-label">Deal Velocity<br>in 4 Months</div></div>
+    </div>
+    <div class="results-text reveal">
+      <p class="s-label">Proven Results</p>
+      <h2 class="s-title">Numbers don't lie.<br><em>Neither do we.</em></h2>
+      <p style="margin-top:28px;">These aren't projections. They're outcomes from a real engagement where we embedded as a dedicated growth partner — designing the sales engine, cleaning the data, training the team, and driving execution from day one.</p>
+      <p>When Altius Group needed to transform from a collection of individual service lines into a coordinated, group-led commercial operation, we built the framework and stayed in the room until it worked.</p>
+      <p class="highlight">Deal volume grew from 35 deals in Q1 to 80 in Q2. Average monthly pipeline rose from $2.3M to $5.1M. The engine is running.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- APPROACH -->
+<section class="approach" id="approach">
+  <div class="reveal">
+    <p class="s-label">Our Approach</p>
+    <h2 class="s-title">Four phases.<br>One <em>outcome.</em></h2>
+  </div>
+  <div class="approach-steps">
+    <div class="step reveal"><div class="step-bar"></div><div class="step-big-num">01</div><div class="step-title">Discovery & Plan Design</div><p class="step-desc">We meet your executive team, map your current state, assess risks and opportunities, and design a precise implementation roadmap covering data, campaigns, sales model, and account management.</p></div>
+    <div class="step reveal"><div class="step-bar"></div><div class="step-big-num">02</div><div class="step-title">Strategy & Design</div><p class="step-desc">We define your KPI framework, review CRM architecture, segment your customer base, and coordinate the commercial restructure — built to the realities of how your business actually works.</p></div>
+    <div class="step reveal"><div class="step-bar"></div><div class="step-big-num">03</div><div class="step-title">Enablement & Execution</div><p class="step-desc">We stand up a cross-functional campaign development team, develop sales playbooks and scripts, and drive the activation of your full go-to-market capability across sales, marketing, and customer success.</p></div>
+    <div class="step reveal"><div class="step-bar"></div><div class="step-big-num">04</div><div class="step-title">Operationalisation & Performance</div><p class="step-desc">Weekly execution rhythm, fortnightly steering committees, Deal Clinics, QBRs, and ongoing leadership coaching — until the business owns the engine and the results are undeniable.</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="reveal">
+      <p class="s-label">Get In Touch</p>
+      <h2 class="contact-heading">Let's<br><span>Build</span><br>Together.</h2>
+      <p class="contact-sub">If you're ready to stop leaving revenue on the table and start building a commercial operation that performs — we'd like to hear from you. We work with a focused number of clients at any one time to make sure every engagement gets the attention it deserves.</p>
+    </div>
+    <div class="contact-cards reveal">
+      <div class="contact-card">
+        <div class="cc-role">CEO & Founder</div>
+        <div class="cc-name">Craig Moore</div>
+        <div class="cc-links">
+          <a class="cc-link" href="mailto:craig@consulting-cm.com"><span class="cc-arrow">→</span>craig@consulting-cm.com</a>
+          <a class="cc-link" href="tel:+61414545588"><span class="cc-arrow">→</span>+61 414 545 588</a>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="cc-role">Director</div>
+        <div class="cc-name">Chris Chiofalo</div>
+        <div class="cc-links">
+          <a class="cc-link" href="mailto:chris@consulting-cm.com"><span class="cc-arrow">→</span>chris@consulting-cm.com</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-logo-text">Cornerman Consulting</span>
+  <span class="footer-copy">© 2025 Cornerman Consulting. All rights reserved.</span>
+</footer>
+
+<script>
+  const cur = document.getElementById('cur');
+  const curR = document.getElementById('curR');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px';
+    curR.style.left = e.clientX + 'px'; curR.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a,.service,.step,.r-stat,.contact-card,.person').forEach(el => {
+    el.addEventListener('mouseenter', () => { curR.style.width='54px'; curR.style.height='54px'; curR.style.borderColor='rgba(235,254,70,0.65)'; });
+    el.addEventListener('mouseleave', () => { curR.style.width='36px'; curR.style.height='36px'; curR.style.borderColor='rgba(235,254,70,0.4)'; });
+  });
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const siblings = entry.target.parentElement.querySelectorAll('.reveal');
+        siblings.forEach((el, i) => setTimeout(() => el.classList.add('on'), i * 100));
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
